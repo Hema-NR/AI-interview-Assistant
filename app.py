@@ -1,73 +1,59 @@
-
 import streamlit as st
 from groq import Groq
-from streamlit.errors import StreamlitSecretNotFoundError
 
-st.set_page_config(
-    page_title="AI Interview Assistant",
-    layout="centered"
-)
+st.set_page_config(page_title='AI Interview Assistant', layout='centered')
 
-st.title("AI Interview Assistant")
-
-st.caption(
-    "Practice interviews with AI-generated questions and constructive feedback."
-)
-
-st.caption("Launched by: HEMA NR")
+st.title('AI Interview Assistant')
+st.caption('Practice interviews with AI')
+st.caption('Launched by: Kusuma Gowda')
 st.write("Department of AI & DS")
 
-# API connection
 try:
-    api_key = st.secrets["GROQ_API_KEY"]
-    client = Groq(api_key=api_key)
+    client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+    st.write("API connection successful")
 
-except (KeyError, FileNotFoundError, StreamlitSecretNotFoundError):
-    st.error(
-        "GROQ_API_KEY is missing. "
-        "Add it to your Streamlit secrets."
-    )
+except (KeyError, FileNotFoundError):
+    st.error("GROQ_API_KEY is missing")
     st.stop()
 
-# Select job role
 role = st.selectbox(
-    "Select Job Role",
+    "Select Job Role:",
     [
         "Python Developer",
         "Java Developer",
         "Data Analyst",
-        "Machine Learning Engineer",
+        "Machine Learning",
         "Software Engineer",
         "HR Executive"
     ]
 )
+difficulty = st.selectbox(
+    "Select Interview Difficulty:",
+    [
+        "Basic",
+        "Medium",
+        "Hard"
+    ]
+)
 
-# Generate interview questions
 if st.button("Generate Interview Questions"):
 
-    prompt = f"Generate 5 interview questions for the role of {role}."
+    prompt = "Generate 5 interview questions for the role of " + role + difficulty
 
-    try:
-        with st.spinner("Generating interview questions..."):
+    response = client.chat.completions.create(
+        model="openai/gpt-oss-120b",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are an expert technical interviewer."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ]
+    )
 
-            response = client.chat.completions.create(
-                model="openai/gpt-oss-120b",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert technical interviewer. Generate clear and relevant interview questions."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ]
-            )
+    output = response.choices[0].message.content
 
-            output = response.choices[0].message.content
-
-            st.subheader("Interview Questions")
-            st.write(output)
-
-    except Exception as e:
-        st.error(f"Error generating questions: {e}")
+    st.write(output)
