@@ -30,3 +30,12 @@ except (KeyError, FileNotFoundError, StreamlitSecretNotFoundError):
         "Add it to your Streamlit secrets."
     )
     st.stop()
+
+role = st.selectbox("Select Job Role",[
+                    "Python Developer",
+                    "Java Developer",
+                    "Data Analyst",
+                    "Machine Learning Engineer",
+                    "Software Engineer",
+                    "HR Executive"
+                    ])
