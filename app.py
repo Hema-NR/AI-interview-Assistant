@@ -1,6 +1,7 @@
 
 import streamlit as st
 from groq import Groq
+from streamlit.errors import StreamlitSecretNotFoundError
 
 st.set_page_config(
     page_title="AI Interview Assistant",
@@ -17,8 +18,15 @@ st.caption("Launched by: HEMA NR")
 st.write("Department of AI & DS")
 
 try:
-    client = Groq(api_keys=st.secrets['GROQ_API_KEY'])
-    st.write("API connection successful")
-except (KeyError, FileNotFounderror):
-    st.error("GROQ_API_KEY is missing. Add it to Streamlit Cloud --> App setting")
+    api_key = st.secrets["GROQ_API_KEY"]
+
+    client = Groq(api_key=api_key)
+
+    st.success("API connection successful!")
+
+except (KeyError, FileNotFoundError, StreamlitSecretNotFoundError):
+    st.error(
+        "GROQ_API_KEY is missing. "
+        "Add it to your Streamlit secrets."
+    )
     st.stop()
