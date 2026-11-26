@@ -14,3 +14,4 @@ st.caption(
 )
 
 st.caption("Launched by: HEMA NR")
+st.write("Department of AI & DS")
