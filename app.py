@@ -5,7 +5,7 @@ st.set_page_config(page_title='AI Interview Assistant', layout='centered')
 
 st.title('AI Interview Assistant')
 st.caption('Practice interviews with AI')
-st.caption('Launched by: Kusuma Gowda')
+st.caption('Launched by: HEMA GOWDA')
 st.write("Department of AI & DS")
 
 try:
